@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5841ee2e-390e-4412-b5ae-4aa071a44dd7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="App.Metrics.Abstractions" Version="4.3.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
+    <PackageReference Include="Polly" Version="7.2.3" />
+    <PackageReference Include="Scrutor" Version="4.2.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    <PackageReference Include="Telegram.Bot" Version="18.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Configuration\Configuration.csproj" />
+    <ProjectReference Include="..\..\Extensions\Extensions.csproj" />
+    <ProjectReference Include="..\..\Interfaces\Interfaces.csproj" />
+    <ProjectReference Include="..\..\RabbitMQ\RabbitMQ.Contracts\RabbitMQ.Contracts.csproj" />
+    <ProjectReference Include="..\..\RabbitMQ\RabbitMQ\RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\Services\Services.csproj" />
+    <ProjectReference Include="..\..\Storage\Repository\Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
+  </ItemGroup>
+
+</Project>

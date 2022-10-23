@@ -1,0 +1,104 @@
+version: '3.1'
+services:
+  botapp:
+    image: botapp
+    environment:
+      ASPNETCORE_ENVIRONMENT: Release
+    ports:
+      - 5000:80
+    depends_on:
+      - rabbitmq
+
+  notifyjob:
+    image: notifyjob
+    environment:
+      ASPNETCORE_ENVIRONMENT: Release
+    ports:
+      - 5001:80
+    depends_on:
+      - rabbitmq
+
+  loadjob:
+    image: loadjob
+    environment:
+      ASPNETCORE_ENVIRONMENT: Release
+    ports:
+      - 5002:80
+    depends_on:
+      - rabbitmq
+
+  pgadmin:
+    image: dpage/pgadmin4:4.18
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: yetisergey@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8090:80"
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ./rabbitmq/data:/var/lib/rabbitmq
+        - ./rabbitmq/log:/var/log/rabbitmq
+
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - ./postgres:/var/lib/postgresql/data
+
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    command: --config /etc/otel-collector-config.yaml
+    volumes:
+      - ./otel/config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "1888:1888"  
+      - "8888:8888"  
+      - "8889:8889"  
+      - "13133:13133"
+      - "4317:4317"  
+      - "4318:4318"  
+      - "55679:55679"
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+
+  grafana:
+    image: grafana/grafana:8.3.3
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    depends_on:
+      - prometheus
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - 16686:16686
+      - 14268:14268
+      - 14250:14250
+  
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411

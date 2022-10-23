@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  botapp:
+    image: botapp
+    build:
+      context: .
+      dockerfile: src/Jobs/BotApp/Dockerfile
+
+  notifyjob:
+    image: notifyjob
+    build:
+      context: .
+      dockerfile: src/Jobs/NotifyJob/Dockerfile
+
+  loadjob:
+    image: loadjob
+    build:
+      context: .
+      dockerfile: src/Jobs/LoadJob/Dockerfile
+
